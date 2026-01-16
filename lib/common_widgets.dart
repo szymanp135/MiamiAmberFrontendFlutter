@@ -23,21 +23,17 @@ class ResponsivePostGrid extends StatelessWidget {
 
     final settings = Provider.of<SettingsProvider>(context);
 
-    // Sortowanie (Issue 4)
     final sortedPosts = List<Post>.from(posts);
     sortedPosts.sort((a, b) {
-      // Domyślne sortowanie API vs Wymuszone nasze
-      // Zakładamy, że API zwraca różnie, więc sortujemy po dacie
       if (settings.sortNewestFirst) {
-        return b.date.compareTo(a.date); // Najnowsze na górze
+        return b.date.compareTo(a.date);
       } else {
-        return a.date.compareTo(b.date); // Najstarsze na górze
+        return a.date.compareTo(b.date);
       }
     });
 
     return Column(
       children: [
-        // Pasek filtrów
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
           child: Row(
@@ -57,14 +53,14 @@ class ResponsivePostGrid extends StatelessWidget {
             ],
           ),
         ),
-        // Właściwa siatka Masonry
         Expanded(
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1200),
-              child: MasonryGridView.count(
+              // ZMIANA: .extent zamiast .count
+              child: MasonryGridView.extent(
                 padding: const EdgeInsets.all(16),
-                crossAxisCount: 3, // Zawsze 3 kolumny
+                maxCrossAxisExtent: 400, // Post nie będzie szerszy niż 400px
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
                 itemCount: sortedPosts.length,
