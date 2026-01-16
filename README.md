@@ -7,7 +7,7 @@ Application made upon html + python version \
 
 ## Getting Started
 
-To start this application first run these two commands in terminal:
+To start this application first run these two commands in terminal: \
 ```flutter clean``` \
 ```flutter pub get```
 
