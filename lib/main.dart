@@ -67,15 +67,16 @@ class MiamiAmberApp extends StatelessWidget {
   }
 }
 
-// --- Layout z Paskiem Bocznym ---
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});
+
   @override
   State<MainScaffold> createState() => _MainScaffoldState();
 }
 
 class _MainScaffoldState extends State<MainScaffold> {
   int _currentIndex = 0;
+
   final List<Widget> _pages = [
     const HomeScreen(),
     const CreatePostScreen(),
@@ -86,34 +87,53 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isWideScreen = MediaQuery.of(context).size.width > 800;
+    // Sprawdzamy szerokość ekranu
+    final double width = MediaQuery.of(context).size.width;
+    final bool isSmallScreen = width < 600; // Standardowy próg dla telefonów
+    final bool isWideScreen = width > 900;  // Próg dla rozszerzonego menu
 
-    return Scaffold(
-      body: Row(
-        children: [
-          NavigationRail(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (int index) => setState(() => _currentIndex = index),
-            extended: isWideScreen,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            indicatorColor: kMiamiAmberColor,
-            selectedIconTheme: const IconThemeData(color: Colors.black), // Ikona wybrana czarna dla kontrastu na żółtym
-            destinations: const [
-              NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: Text('Home')),
-              NavigationRailDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: Text('Create')),
-              NavigationRailDestination(icon: Icon(Icons.search), selectedIcon: Icon(Icons.search_rounded), label: Text('Users')),
-              NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text('Profile')),
-              NavigationRailDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: Text('Settings')),
-            ],
-          ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(child: _pages[_currentIndex]),
-        ],
-      ),
-    );
+    if (isSmallScreen) {
+      // --- WIDOK NA TELEFON (Pasek na dole) ---
+      return Scaffold(
+        body: _pages[_currentIndex],
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (int index) => setState(() => _currentIndex = index),
+          indicatorColor: kMiamiAmberColor,
+          destinations: const [
+            NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Home'),
+            NavigationDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: 'Create'),
+            NavigationDestination(icon: Icon(Icons.search), label: 'Users'),
+            NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profile'),
+            NavigationDestination(icon: Icon(Icons.settings_outlined), label: 'Settings'),
+          ],
+        ),
+      );
+    } else {
+      // --- WIDOK NA KOMPUTER (Pasek z boku) ---
+      return Scaffold(
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: _currentIndex,
+              onDestinationSelected: (int index) => setState(() => _currentIndex = index),
+              extended: isWideScreen, // Rozwiń tekst tylko na szerokich oknach
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              indicatorColor: kMiamiAmberColor,
+              selectedIconTheme: const IconThemeData(color: Colors.black),
+              destinations: const [
+                NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: Text('Home')),
+                NavigationRailDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: Text('Create')),
+                NavigationRailDestination(icon: Icon(Icons.search), selectedIcon: Icon(Icons.search_rounded), label: Text('Users')),
+                NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text('Profile')),
+                NavigationRailDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: Text('Settings')),
+              ],
+            ),
+            const VerticalDivider(thickness: 1, width: 1),
+            Expanded(child: _pages[_currentIndex]),
+          ],
+        ),
+      );
+    }
   }
 }
-
-// --- WIDGETY UI ---
-
-

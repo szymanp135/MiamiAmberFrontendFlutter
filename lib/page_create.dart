@@ -91,22 +91,42 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Używamy LayoutBuilder, żeby sprawdzić czy zmieścimy panel boczny
+    // Sprawdzamy, czy mamy wystarczająco dużo miejsca na układ poziomy
+    final bool isWide = MediaQuery.of(context).size.width > 800;
+
+    // Definiujemy widget poradnika, żeby nie powtarzać kodu
+    Widget ratingGuideWidget() => Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: kMiamiAmberColor,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: const [BoxShadow(blurRadius: 4, color: Colors.black26, offset: Offset(2, 2))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Rating Guide", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black)),
+          const Divider(color: Colors.black54),
+          Text(ratingGuide, style: const TextStyle(fontFamily: 'monospace', fontSize: 13, color: Colors.black, height: 1.5)),
+        ],
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(title: const Text("Create Review")),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1000), // Szerszy kontener, żeby zmieścić panel boczny
+          constraints: BoxConstraints(maxWidth: isWide ? 1000 : 600),
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // LEWA STRONA: Formularz
-                Expanded(
-                  flex: 3,
-                  child: Form(
-                    key: _formKey,
+            child: Form(
+              key: _formKey,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // GŁÓWNY FORMULARZ
+                  Expanded(
+                    flex: 3,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -126,52 +146,54 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         const SizedBox(height: 16),
                         TextFormField(controller: _albumController, decoration: const InputDecoration(labelText: "Album", border: OutlineInputBorder())),
                         const SizedBox(height: 16),
-
-                        // Issue 5: Skalujący się tekst
                         TextFormField(
                           controller: _textController,
                           decoration: const InputDecoration(labelText: "Review Text", border: OutlineInputBorder()),
-                          minLines: 4, // Startuje od 4 linii
-                          maxLines: null, // Rośnie w nieskończoność (do granic scrolla strony)
+                          minLines: 4,
+                          maxLines: null,
                           validator: (v) => v!.isEmpty ? "Required" : null,
                         ),
-
                         const SizedBox(height: 16),
                         TextFormField(controller: _tagsController, decoration: const InputDecoration(labelText: "Tags", border: OutlineInputBorder())),
                         const SizedBox(height: 24),
                         Text("Rating: ${_rating.toInt()}/100", textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                        Slider(value: _rating, min: 0, max: 100, divisions: 100, label: _rating.round().toString(), onChanged: (v) => setState(() => _rating = v), activeColor: kMiamiAmberColor),
+                        Slider(
+                          value: _rating,
+                          min: 0,
+                          max: 100,
+                          divisions: 100,
+                          label: _rating.round().toString(),
+                          onChanged: (v) => setState(() => _rating = v),
+                          activeColor: kMiamiAmberColor,
+                        ),
+
+                        // --- DYNAMICZNY ELEMENT ---
+                        // Jeśli ekran jest wąski, wstawiamy legendę tutaj
+                        if (!isWide) ...[
+                          const SizedBox(height: 16),
+                          ratingGuideWidget(),
+                        ],
+
                         const SizedBox(height: 24),
-                        FilledButton(onPressed: _isLoading ? null : _submit, style: FilledButton.styleFrom(padding: const EdgeInsets.all(18)), child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text("Submit Review")),
+                        FilledButton(
+                          onPressed: _isLoading ? null : _submit,
+                          style: FilledButton.styleFrom(padding: const EdgeInsets.all(18)),
+                          child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text("Submit Review"),
+                        ),
                       ],
                     ),
                   ),
-                ),
 
-                const SizedBox(width: 32),
-
-                // PRAWA STRONA: Panel z ocenami (Issue 6)
-                // Wyświetlamy tylko na szerszych ekranach, ale zakładamy desktop
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: kMiamiAmberColor, // Kolor marki
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: const [BoxShadow(blurRadius: 4, color: Colors.black26, offset: Offset(2, 2))],
+                  // Jeśli ekran jest szeroki, pokazujemy panel z boku
+                  if (isWide) ...[
+                    const SizedBox(width: 32),
+                    Expanded(
+                      flex: 1,
+                      child: ratingGuideWidget(),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Rating Guide", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black)),
-                        const Divider(color: Colors.black54),
-                        Text(ratingGuide, style: const TextStyle(fontFamily: 'monospace', fontSize: 13, color: Colors.black, height: 1.5)),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                  ],
+                ],
+              ),
             ),
           ),
         ),
