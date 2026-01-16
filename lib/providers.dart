@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api_service.dart';
 
@@ -38,6 +39,29 @@ class AuthProvider with ChangeNotifier {
     await ApiService().removeToken();
     _token = null;
     _isLoggedIn = false;
+    notifyListeners();
+  }
+}
+
+class SettingsProvider with ChangeNotifier {
+  bool _sortNewestFirst = true; // Domyślnie najnowsze na górze
+
+  bool get sortNewestFirst => _sortNewestFirst;
+
+  SettingsProvider() {
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    _sortNewestFirst = prefs.getBool('sortNewestFirst') ?? true;
+    notifyListeners();
+  }
+
+  Future<void> setSortOrder(bool newestFirst) async {
+    _sortNewestFirst = newestFirst;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('sortNewestFirst', newestFirst);
     notifyListeners();
   }
 }
