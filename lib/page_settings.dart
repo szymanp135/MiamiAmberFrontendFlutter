@@ -44,7 +44,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Center(child: Text("Miami Amber App v1.0.2", style: TextStyle(color: Colors.grey))),
+              const Center(child: Text("Miami Amber App v1.260117.0", style: TextStyle(color: Colors.grey))),
             ],
           ),
         ),
