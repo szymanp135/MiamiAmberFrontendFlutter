@@ -81,7 +81,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     const HomeScreen(),
     const CreatePostScreen(),
     const UserSearchScreen(),
-    const ProfileScreen(),
+    //const ProfileScreen(),
     const SettingsScreen(),
   ];
 
@@ -104,7 +104,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Home'),
             NavigationDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: 'Create'),
             NavigationDestination(icon: Icon(Icons.search), label: 'Users'),
-            NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profile'),
+            //NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profile'),
             NavigationDestination(icon: Icon(Icons.settings_outlined), label: 'Settings'),
           ],
         ),
@@ -125,7 +125,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                 NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: Text('Home')),
                 NavigationRailDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: Text('Create')),
                 NavigationRailDestination(icon: Icon(Icons.search), selectedIcon: Icon(Icons.search_rounded), label: Text('Users')),
-                NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text('Profile')),
+                //NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text('Profile')),
                 NavigationRailDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: Text('Settings')),
               ],
             ),
