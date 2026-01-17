@@ -54,7 +54,7 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
           ),
           if (_isLoading) const LinearProgressIndicator(color: kMiamiAmberColor),
           if (_userData != null) ...[
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
@@ -62,7 +62,7 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
                   Text(_userData!['user']['description'] ?? "No description", style: const TextStyle(fontStyle: FontStyle.italic)),
                 ],
               ),
-            ),
+            ),*/
             const Divider(),
             // Użycie wspólnego grida z sortowaniem
             Expanded(child: ResponsivePostGrid(posts: userPosts)),
