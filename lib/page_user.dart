@@ -54,21 +54,30 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
           ),
           if (_isLoading) const LinearProgressIndicator(color: kMiamiAmberColor),
           if (_userData != null) ...[
-            /*Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(_userData!['user']['name'], style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text(_userData!['user']['description'] ?? "No description", style: const TextStyle(fontStyle: FontStyle.italic)),
-                ],
-              ),
-            ),*/
+            /**/
             const Divider(),
             // Użycie wspólnego grida z sortowaniem
-            Expanded(child: ResponsivePostGrid(posts: userPosts)),
+            Expanded(child:
+              ResponsivePostGrid(
+                posts: userPosts,
+                scrollableHead: userNameBar(_userData!),
+              ),
+            ),
           ],
         ],
       ),
     );
   }
+}
+
+Widget userNameBar(Map<String, dynamic> userData) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Column(
+      children: [
+        Text(userData['user']['name'], style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(userData['user']['description'] ?? "No description", style: const TextStyle(fontStyle: FontStyle.italic)),
+      ],
+    ),
+  );
 }

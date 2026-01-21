@@ -15,7 +15,12 @@ String fixText(String text) => unescape.convert(text);
 
 class ResponsivePostGrid extends StatelessWidget {
   final List<Post> posts;
-  const ResponsivePostGrid({super.key, required this.posts});
+  final Widget scrollableHead;
+  const ResponsivePostGrid({
+    super.key,
+    required this.posts,
+    this.scrollableHead = const SizedBox(height: 1)
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,41 +37,56 @@ class ResponsivePostGrid extends StatelessWidget {
       }
     });
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+    return CustomScrollView(
+      slivers: [
+        // 1. Elementy, które mają się scrollować na górze
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text("Sort by: "),
-              DropdownButton<bool>(
-                value: settings.sortNewestFirst,
-                items: const [
-                  DropdownMenuItem(value: true, child: Text("Newest first")),
-                  DropdownMenuItem(value: false, child: Text("Oldest first")),
-                ],
-                onChanged: (val) {
-                  if (val != null) settings.setSortOrder(val);
-                },
+              scrollableHead,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text("Sort by: "),
+                    DropdownButton<bool>(
+                      value: settings.sortNewestFirst,
+                      items: const [
+                        DropdownMenuItem(value: true, child: Text("Newest first")),
+                        DropdownMenuItem(value: false, child: Text("Oldest first")),
+                      ],
+                      onChanged: (val) {
+                        if (val != null) settings.setSortOrder(val);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
-        Expanded(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1200),
-              // ZMIANA: .extent zamiast .count
-              child: MasonryGridView.extent(
-                padding: const EdgeInsets.all(16),
-                maxCrossAxisExtent: 400, // Post nie będzie szerszy niż 400px
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                itemCount: sortedPosts.length,
-                itemBuilder: (context, index) {
-                  return VerticalPostCard(post: sortedPosts[index]);
-                },
+        // 2. Twój Grid ograniczony szerokością
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverToBoxAdapter(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1200),
+                // Używamy wersji .count lub .extent bezpośrednio,
+                // ale musimy obsłużyć przewijanie przez CustomScrollView
+                child: MasonryGridView.extent(
+                  shrinkWrap: true, // WAŻNE: pozwala gridowi zająć tylko tyle miejsca, ile potrzebuje
+                  physics: const NeverScrollableScrollPhysics(), // Scrollowanie obsługuje CustomScrollView
+                  maxCrossAxisExtent: 400,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  itemCount: sortedPosts.length,
+                  itemBuilder: (context, index) {
+                    return VerticalPostCard(post: sortedPosts[index]);
+                  },
+                ),
               ),
             ),
           ),
