@@ -6,4 +6,4 @@ const kMiamiAmberColor = Color(0xFFFFC000);
 const kLightBgColor = Colors.white;
 const kDarkBgColor = Color(0xFF1E1E1E);
 
-const String versionText = "v1.260121.1";
+const String versionText = "v1.260124.0";
