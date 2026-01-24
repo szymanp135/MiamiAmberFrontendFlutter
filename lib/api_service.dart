@@ -14,11 +14,26 @@ class ApiService {
   Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwt', token);
+
+    Map<String, dynamic> payload = _parseJwt(token);
+    if (payload.containsKey('id')) {
+      await prefs.setInt('userId', payload['id']);
+    }
   }
 
   Future<void> removeToken() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('jwt');
+    await prefs.remove('userId');
+  }
+
+  Future<int?> getCurrentUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    if(prefs.getInt('userId') == null) {
+      prefs.clear();
+      throw Exception('Outdated/invalid cached data');
+    }
+    return prefs.getInt('userId');
   }
 
   Future<Map<String, dynamic>> login(String username, String password) async {
@@ -29,7 +44,10 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      String token = data['token'];
+      await saveToken(token);
+      return data;
     } else {
       throw Exception('Login failed: ${response.body}');
     }
@@ -87,12 +105,90 @@ class ApiService {
     }
   }
 
+  // Get list of people who user_id is following
+  // This function *was at some point* written manually by a human.
+  Future<List<dynamic>> getFollowing(int user_id) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/users/$user_id/following'),
+    );
+    if(response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 404) {
+      throw Exception('User not found');
+    } else {
+      throw Exception('Error searching user');
+    }
+  }
+
+  // Followowanie użytkownika
+  Future<void> followUser(int userId) async {
+    final token = await getToken();
+    if (token == null) throw Exception("Not logged in");
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/users/$userId/follow'),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode != 200) {
+      if (response.statusCode == 400 && response.body.contains('Already')){
+        throw Exception('Already following this user');
+      }
+      throw Exception('Failed to follow user: ${response.body}');
+    }
+  }
+
+  // Od-followowanie użytkownika
+  Future<void> unfollowUser(int userId) async {
+    final token = await getToken();
+    if (token == null) throw Exception("Not logged in");
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/users/$userId/follow'),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode != 200) {
+      if (response.statusCode == 400 && response.body.contains('Already')){
+        throw Exception('Already not following this user');
+      }
+      throw Exception('Failed to unfollow user: ${response.body}');
+    }
+  }
+
+  // Sprawdza czy zalogowany user followuje targetUserId
+  Future<bool> isFollowing(int targetUserId) async {
+    final currentUserId = await getCurrentUserId();
+    if (currentUserId == null) {
+      throw Exception('Log in first');
+    }
+
+    // Jeśli sprawdzasz swój własny profil, to technicznie nie followujesz samego siebie
+    if (currentUserId == targetUserId) return false;
+
+    final followingList = await getFollowing(currentUserId);
+
+    // Iterujemy po liście obiektów zwróconych przez API
+    for (var user in followingList) {
+      if (user['id'] == targetUserId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Funkcja MusicBrainz z index.html przepisana na Dart
   Future<Map<String, dynamic>> fetchMusicBrainzData(String mbid) async {
     final url = "https://musicbrainz.org/ws/2/release/$mbid?inc=artists+tags&fmt=json";
     final response = await http.get(
       Uri.parse(url),
-      headers: {"User-Agent": "MiamiAmberFlutter/1.0 (contact@miami.monster)"},
+      headers: {"User-Agent": "MiamiAmber/1.0 (contact@miami.monster)"},
     );
 
     if (response.statusCode == 200) {
@@ -100,5 +196,31 @@ class ApiService {
     } else {
       throw Exception('MBID not found or invalid');
     }
+  }
+
+  Map<String, dynamic> _parseJwt(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      throw Exception('Invalid token');
+    }
+
+    final payload = _decodeBase64(parts[1]);
+    final payloadMap = json.decode(payload);
+    if (payloadMap is! Map<String, dynamic>) {
+      throw Exception('Invalid payload');
+    }
+
+    return payloadMap;
+  }
+
+  String _decodeBase64(String str) {
+    String output = str.replaceAll('-', '+').replaceAll('_', '/');
+    switch (output.length % 4) {
+      case 0: break;
+      case 2: output += '=='; break;
+      case 3: output += '='; break;
+      default: throw Exception('Illegal base64url string!"');
+    }
+    return utf8.decode(base64Url.decode(output));
   }
 }
