@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -50,6 +52,8 @@ class ResponsivePostGrid extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    Text('Posts: ${sortedPosts.length}'),
+                    const SizedBox(width: 24),
                     const Text("Sort by: "),
                     DropdownButton<bool>(
                       value: settings.sortNewestFirst,

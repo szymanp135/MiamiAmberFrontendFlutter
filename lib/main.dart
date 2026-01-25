@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:miami_amber_flutter_frontend/page_create.dart';
+import 'package:miami_amber_flutter_frontend/page_following.dart';
 import 'package:miami_amber_flutter_frontend/page_home.dart';
 import 'package:miami_amber_flutter_frontend/page_profile.dart';
 import 'package:miami_amber_flutter_frontend/page_settings.dart';
@@ -79,6 +80,7 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   final List<Widget> _pages = [
     const HomeScreen(),
+    const FollowingScreen(),
     const CreatePostScreen(),
     const UserSearchScreen(),
     const ProfileScreen(),
@@ -102,6 +104,7 @@ class _MainScaffoldState extends State<MainScaffold> {
           indicatorColor: kMiamiAmberColor,
           destinations: const [
             NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Home'),
+            NavigationDestination(icon: Icon(Icons.favorite_outline_outlined), selectedIcon: Icon(Icons.favorite), label: 'Following'),
             NavigationDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: 'Create'),
             NavigationDestination(icon: Icon(Icons.search), label: 'Users'),
             NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profile'),
@@ -123,6 +126,7 @@ class _MainScaffoldState extends State<MainScaffold> {
               selectedIconTheme: const IconThemeData(color: Colors.black),
               destinations: const [
                 NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: Text('Home')),
+                NavigationRailDestination(icon: Icon(Icons.favorite_outline_outlined), selectedIcon: Icon(Icons.favorite), label: Text('Following')),
                 NavigationRailDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: Text('Create')),
                 NavigationRailDestination(icon: Icon(Icons.search), selectedIcon: Icon(Icons.search_rounded), label: Text('Users')),
                 NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text('Profile')),

@@ -5,13 +5,13 @@ import 'api_service.dart';
 import 'common_widgets.dart';
 import 'models.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class FollowingScreen extends StatefulWidget {
+  const FollowingScreen({super.key});
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<FollowingScreen> createState() => _FollwingScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _FollwingScreenState extends State<FollowingScreen> {
   late Future<List<Post>> _postsFuture;
 
   @override
@@ -21,14 +21,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   void _refreshPosts() {
-    setState(() { _postsFuture = ApiService().getPosts(); });
+    setState(() { _postsFuture = ApiService().getFollowingPosts(); });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Miami Amber'),
+        title: const Text('Following'),
       ),
       body: FutureBuilder<List<Post>>(
         future: _postsFuture,
@@ -39,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _refreshPosts,
-        child: const Icon(Icons.refresh)
+          onPressed: _refreshPosts,
+          child: const Icon(Icons.refresh)
       ),
     );
   }

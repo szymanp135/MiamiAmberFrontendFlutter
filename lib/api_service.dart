@@ -31,6 +31,7 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     if(prefs.getInt('userId') == null) {
       prefs.clear();
+      throw Exception('Not logged in');
     }
     return prefs.getInt('userId');
   }
@@ -180,6 +181,28 @@ class ApiService {
       }
     }
     return false;
+  }
+
+  // get posts people you follow
+  Future<List<Post>> getFollowingPosts() async {
+    final token = await getToken();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/posts/following'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // To jest kluczowe dla FastAPI
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      return body.map((dynamic item) => Post.fromJson(item)).toList();
+    } else if (response.statusCode == 401) {
+      throw Exception('Not logged in');
+    } else {
+      throw Exception('Error loading following posts');
+    }
   }
 
   // Funkcja MusicBrainz z index.html przepisana na Dart
