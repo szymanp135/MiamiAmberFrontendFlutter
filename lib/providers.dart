@@ -62,10 +62,27 @@ class AuthProvider with ChangeNotifier {
   }
 }
 
-class SettingsProvider with ChangeNotifier {
-  bool _sortNewestFirst = true; // Domyślnie najnowsze na górze
+enum SortingType {
+  byNewest,
+  byOldest,
+  byMostRated,
+  byLeastRated;
 
-  bool get sortNewestFirst => _sortNewestFirst;
+  static SortingType fromString(String s) => switch (s) {
+    "byNewest" => byNewest,
+    "byOldest" => byOldest,
+    "byMostRated" => byMostRated,
+    "byLeastRated" => byLeastRated,
+    _ => byNewest
+  };
+}
+
+String SortingTypeToString(SortingType arg) => arg.toString().split(".").last;
+
+class SettingsProvider with ChangeNotifier {
+  SortingType _sortingType = SortingType.byNewest;
+
+  SortingType get sortingType => _sortingType;
 
   SettingsProvider() {
     _loadSettings();
@@ -73,14 +90,15 @@ class SettingsProvider with ChangeNotifier {
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    _sortNewestFirst = prefs.getBool('sortNewestFirst') ?? true;
+    final type = prefs.getString('sortingType') ?? SortingTypeToString(SortingType.byNewest);
+    _sortingType = SortingType.fromString(type);
     notifyListeners();
   }
 
-  Future<void> setSortOrder(bool newestFirst) async {
-    _sortNewestFirst = newestFirst;
+  Future<void> setSortOrder(SortingType sorting) async {
+    _sortingType = sorting;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('sortNewestFirst', newestFirst);
+    await prefs.setString('sortingType', SortingTypeToString(sorting));
     notifyListeners();
   }
 }

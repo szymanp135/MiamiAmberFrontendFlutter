@@ -29,10 +29,11 @@ class ResponsivePostGrid extends StatelessWidget {
 
     final sortedPosts = List<Post>.from(posts);
     sortedPosts.sort((a, b) {
-      if (settings.sortNewestFirst) {
-        return b.date.compareTo(a.date);
-      } else {
-        return a.date.compareTo(b.date);
+      switch(settings.sortingType){
+        case SortingType.byNewest: return b.date.compareTo(a.date);
+        case SortingType.byOldest: return a.date.compareTo(b.date);
+        case SortingType.byMostRated: return b.rating!.compareTo(a.rating!);
+        case SortingType.byLeastRated: return a.rating!.compareTo(b.rating!);
       }
     });
 
@@ -53,16 +54,22 @@ class ResponsivePostGrid extends StatelessWidget {
                     Text('Posts: ${sortedPosts.length}'),
                     const SizedBox(width: 24),
                     const Text("Sort by: "),
-                    DropdownButton<bool>(
-                      value: settings.sortNewestFirst,
+                    DropdownButton<SortingType>(
+                      value: settings.sortingType,
                       items: const [
                         DropdownMenuItem(
-                            value: true, child: Text("Newest first")),
+                            value: SortingType.byNewest, child: Text("Newest first")),
                         DropdownMenuItem(
-                            value: false, child: Text("Oldest first")),
+                            value: SortingType.byOldest, child: Text("Oldest first")),
+                        DropdownMenuItem(
+                            value: SortingType.byMostRated, child: Text("Most Rated first")),
+                        DropdownMenuItem(
+                            value: SortingType.byLeastRated, child: Text("Least Rated first")),
                       ],
                       onChanged: (val) {
-                        if (val != null) settings.setSortOrder(val);
+                        if (val != null) {
+                          settings.setSortOrder(val);
+                        }
                       },
                     ),
                   ],

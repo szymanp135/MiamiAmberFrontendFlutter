@@ -47,13 +47,23 @@ class _SettingsTabContent extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.sort),
                 title: const Text("Default Sort Order"),
-                subtitle: Text(settingsProvider.sortNewestFirst
-                    ? "Newest posts first"
-                    : "Oldest posts first"),
-                trailing: Switch(
-                  value: settingsProvider.sortNewestFirst,
-                  activeColor: kMiamiAmberColor,
-                  onChanged: (val) => settingsProvider.setSortOrder(val),
+                trailing: DropdownButton<SortingType>(
+                  value: settingsProvider.sortingType,
+                  items: const [
+                    DropdownMenuItem(
+                        value: SortingType.byNewest, child: Text("Newest first")),
+                    DropdownMenuItem(
+                        value: SortingType.byOldest, child: Text("Oldest first")),
+                    DropdownMenuItem(
+                        value: SortingType.byMostRated, child: Text("Most Rated first")),
+                    DropdownMenuItem(
+                        value: SortingType.byLeastRated, child: Text("Least Rated first")),
+                  ],
+                  onChanged: (val) {
+                    if (val != null) {
+                      settingsProvider.setSortOrder(val);
+                    }
+                  },
                 ),
               ),
             ),
