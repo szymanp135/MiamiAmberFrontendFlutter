@@ -40,28 +40,38 @@ class MiamiAmberApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.light,
         scaffoldBackgroundColor: kLightBgColor,
-        colorScheme: ColorScheme.fromSeed(seedColor: kMiamiAmberColor, brightness: Brightness.light, primary: kMiamiAmberColor),
-        appBarTheme: const AppBarTheme(backgroundColor: kMiamiAmberColor, foregroundColor: Colors.white, centerTitle: true),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: kMiamiAmberColor,
+            brightness: Brightness.light,
+            primary: kMiamiAmberColor),
+        appBarTheme: const AppBarTheme(
+            backgroundColor: kMiamiAmberColor,
+            foregroundColor: Colors.white,
+            centerTitle: true),
         // Naprawa kolorów Tabs w jasnym motywie
         tabBarTheme: const TabBarThemeData(
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          indicatorColor: Colors.white
-      ),
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
+            indicatorColor: Colors.white),
       ),
       // CIEMNY
       darkTheme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
         scaffoldBackgroundColor: kDarkBgColor,
-        colorScheme: ColorScheme.fromSeed(seedColor: kMiamiAmberColor, brightness: Brightness.dark, primary: kMiamiAmberColor),
-        appBarTheme: const AppBarTheme(backgroundColor: kMiamiAmberColor, foregroundColor: Colors.black, centerTitle: true),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: kMiamiAmberColor,
+            brightness: Brightness.dark,
+            primary: kMiamiAmberColor),
+        appBarTheme: const AppBarTheme(
+            backgroundColor: kMiamiAmberColor,
+            foregroundColor: Colors.black,
+            centerTitle: true),
         // Naprawa kolorów Tabs w ciemnym motywie (Issue 3)
         tabBarTheme: const TabBarThemeData(
             labelColor: Colors.black,
             unselectedLabelColor: Colors.black54,
-            indicatorColor: Colors.black
-        ),
+            indicatorColor: Colors.black),
       ),
       home: const MainScaffold(),
     );
@@ -92,7 +102,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     // Sprawdzamy szerokość ekranu
     final double width = MediaQuery.of(context).size.width;
     final bool isSmallScreen = width < 600; // Standardowy próg dla telefonów
-    final bool isWideScreen = width > 900;  // Próg dla rozszerzonego menu
+    final bool isWideScreen = width > 900; // Próg dla rozszerzonego menu
 
     if (isSmallScreen) {
       // --- WIDOK NA TELEFON (Pasek na dole) ---
@@ -100,15 +110,27 @@ class _MainScaffoldState extends State<MainScaffold> {
         body: _pages[_currentIndex],
         bottomNavigationBar: NavigationBar(
           selectedIndex: _currentIndex,
-          onDestinationSelected: (int index) => setState(() => _currentIndex = index),
+          onDestinationSelected: (int index) =>
+              setState(() => _currentIndex = index),
           indicatorColor: kMiamiAmberColor,
           destinations: const [
-            NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Home'),
-            NavigationDestination(icon: Icon(Icons.favorite_outline_outlined), selectedIcon: Icon(Icons.favorite), label: 'Following'),
-            NavigationDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: 'Create'),
+            NavigationDestination(
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home),
+                label: 'Home'),
+            NavigationDestination(
+                icon: Icon(Icons.favorite_outline_outlined),
+                selectedIcon: Icon(Icons.favorite),
+                label: 'Following'),
+            NavigationDestination(
+                icon: Icon(Icons.add_circle_outline),
+                selectedIcon: Icon(Icons.add_circle),
+                label: 'Create'),
             NavigationDestination(icon: Icon(Icons.search), label: 'Users'),
-            NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profile'),
-            NavigationDestination(icon: Icon(Icons.settings_outlined), label: 'Settings'),
+            NavigationDestination(
+                icon: Icon(Icons.person_outline), label: 'Profile'),
+            NavigationDestination(
+                icon: Icon(Icons.settings_outlined), label: 'Settings'),
           ],
         ),
       );
@@ -119,18 +141,37 @@ class _MainScaffoldState extends State<MainScaffold> {
           children: [
             NavigationRail(
               selectedIndex: _currentIndex,
-              onDestinationSelected: (int index) => setState(() => _currentIndex = index),
+              onDestinationSelected: (int index) =>
+                  setState(() => _currentIndex = index),
               extended: isWideScreen, // Rozwiń tekst tylko na szerokich oknach
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               indicatorColor: kMiamiAmberColor,
               selectedIconTheme: const IconThemeData(color: Colors.black),
               destinations: const [
-                NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: Text('Home')),
-                NavigationRailDestination(icon: Icon(Icons.favorite_outline_outlined), selectedIcon: Icon(Icons.favorite), label: Text('Following')),
-                NavigationRailDestination(icon: Icon(Icons.add_circle_outline), selectedIcon: Icon(Icons.add_circle), label: Text('Create')),
-                NavigationRailDestination(icon: Icon(Icons.search), selectedIcon: Icon(Icons.search_rounded), label: Text('Users')),
-                NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text('Profile')),
-                NavigationRailDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: Text('Settings')),
+                NavigationRailDestination(
+                    icon: Icon(Icons.home_outlined),
+                    selectedIcon: Icon(Icons.home),
+                    label: Text('Home')),
+                NavigationRailDestination(
+                    icon: Icon(Icons.favorite_outline_outlined),
+                    selectedIcon: Icon(Icons.favorite),
+                    label: Text('Following')),
+                NavigationRailDestination(
+                    icon: Icon(Icons.add_circle_outline),
+                    selectedIcon: Icon(Icons.add_circle),
+                    label: Text('Create')),
+                NavigationRailDestination(
+                    icon: Icon(Icons.search),
+                    selectedIcon: Icon(Icons.search_rounded),
+                    label: Text('Users')),
+                NavigationRailDestination(
+                    icon: Icon(Icons.person_outline),
+                    selectedIcon: Icon(Icons.person),
+                    label: Text('Profile')),
+                NavigationRailDestination(
+                    icon: Icon(Icons.settings_outlined),
+                    selectedIcon: Icon(Icons.settings),
+                    label: Text('Settings')),
               ],
             ),
             const VerticalDivider(thickness: 1, width: 1),

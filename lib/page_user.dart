@@ -31,12 +31,19 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
 
   Future<void> _search() async {
     if (_searchController.text.isEmpty) return;
-    setState(() { _isLoading = true; _userData = null; });
+    setState(() {
+      _isLoading = true;
+      _userData = null;
+    });
     try {
       final data = await ApiService().searchUser(_searchController.text.trim());
-      setState(() { _userData = data; });
+      setState(() {
+        _userData = data;
+      });
     } catch (e) {
-      if(mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      if (mounted)
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -46,7 +53,8 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
   Widget build(BuildContext context) {
     List<Post> userPosts = [];
     if (_userData != null) {
-      userPosts = (_userData!['posts'] as List).map((p) => Post.fromJson(p)).toList();
+      userPosts =
+          (_userData!['posts'] as List).map((p) => Post.fromJson(p)).toList();
     }
 
     return Scaffold(
@@ -61,17 +69,22 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
                 child: TextField(
                   controller: _searchController,
                   onSubmitted: (_) => _search(),
-                  decoration: InputDecoration(labelText: "Username", border: const OutlineInputBorder(), suffixIcon: IconButton(icon: const Icon(Icons.search), onPressed: _search)),
+                  decoration: InputDecoration(
+                      labelText: "Username",
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                          icon: const Icon(Icons.search), onPressed: _search)),
                 ),
               ),
             ),
           ),
-          if (_isLoading) const LinearProgressIndicator(color: kMiamiAmberColor),
+          if (_isLoading)
+            const LinearProgressIndicator(color: kMiamiAmberColor),
           if (_userData != null) ...[
             const Divider(),
             // Użycie wspólnego grida z sortowaniem
-            Expanded(child:
-              ResponsivePostGrid(
+            Expanded(
+              child: ResponsivePostGrid(
                 posts: userPosts,
                 scrollableHead: UserHeader(userData: _userData!),
               ),
@@ -127,7 +140,11 @@ class _UserHeaderState extends State<UserHeader> {
       final currentUserId = await _api.getCurrentUserId();
 
       if (currentUserId == targetUserId) {
-        if (mounted) setState(() { _isMe = true; _isLoading = false; });
+        if (mounted)
+          setState(() {
+            _isMe = true;
+            _isLoading = false;
+          });
         return;
       }
 
@@ -193,21 +210,23 @@ class _UserHeaderState extends State<UserHeader> {
                 widget.userData['user']['description'],
                 style: const TextStyle(fontStyle: FontStyle.italic),
               ),
-            ) else 
-              const Padding(
-                padding: EdgeInsets.only(top: 4.0),
-                child: Text(
-                  'No description provided',
-                  style: TextStyle(fontStyle: FontStyle.italic)
-                ),
-              ),
+            )
+          else
+            const Padding(
+              padding: EdgeInsets.only(top: 4.0),
+              child: Text('No description provided',
+                  style: TextStyle(fontStyle: FontStyle.italic)),
+            ),
           const SizedBox(height: 10),
 
           // Logika wyświetlania przycisku
           if (_isMe)
             const Chip(label: Text("This is my profile"))
           else if (_isLoading)
-            const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+            const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2))
           else
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

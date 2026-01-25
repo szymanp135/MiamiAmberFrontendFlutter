@@ -11,7 +11,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late Future<List<Post>> _postsFuture;
 
   @override
@@ -21,7 +22,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   void _refreshPosts() {
-    setState(() { _postsFuture = ApiService().getPosts(); });
+    setState(() {
+      _postsFuture = ApiService().getPosts();
+    });
   }
 
   @override
@@ -33,15 +36,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       body: FutureBuilder<List<Post>>(
         future: _postsFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError) return Center(child: SelectableText('Error: ${snapshot.error}'));
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return const Center(child: CircularProgressIndicator());
+          if (snapshot.hasError)
+            return Center(child: SelectableText('Error: ${snapshot.error}'));
           return ResponsivePostGrid(posts: snapshot.data ?? []);
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _refreshPosts,
-        child: const Icon(Icons.refresh)
-      ),
+          onPressed: _refreshPosts, child: const Icon(Icons.refresh)),
     );
   }
 }

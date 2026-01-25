@@ -21,7 +21,9 @@ class _FollwingScreenState extends State<FollowingScreen> {
   }
 
   void _refreshPosts() {
-    setState(() { _postsFuture = ApiService().getFollowingPosts(); });
+    setState(() {
+      _postsFuture = ApiService().getFollowingPosts();
+    });
   }
 
   @override
@@ -33,15 +35,15 @@ class _FollwingScreenState extends State<FollowingScreen> {
       body: FutureBuilder<List<Post>>(
         future: _postsFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError) return Center(child: SelectableText('Error: ${snapshot.error}'));
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return const Center(child: CircularProgressIndicator());
+          if (snapshot.hasError)
+            return Center(child: SelectableText('Error: ${snapshot.error}'));
           return ResponsivePostGrid(posts: snapshot.data ?? []);
         },
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: _refreshPosts,
-          child: const Icon(Icons.refresh)
-      ),
+          onPressed: _refreshPosts, child: const Icon(Icons.refresh)),
     );
   }
 }

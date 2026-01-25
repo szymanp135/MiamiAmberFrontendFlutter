@@ -16,11 +16,10 @@ String fixText(String text) => unescape.convert(text);
 class ResponsivePostGrid extends StatelessWidget {
   final List<Post> posts;
   final Widget scrollableHead;
-  const ResponsivePostGrid({
-    super.key,
-    required this.posts,
-    this.scrollableHead = const SizedBox(height: 1)
-  });
+  const ResponsivePostGrid(
+      {super.key,
+      required this.posts,
+      this.scrollableHead = const SizedBox(height: 1)});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +45,8 @@ class ResponsivePostGrid extends StatelessWidget {
             children: [
               scrollableHead,
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -56,8 +56,10 @@ class ResponsivePostGrid extends StatelessWidget {
                     DropdownButton<bool>(
                       value: settings.sortNewestFirst,
                       items: const [
-                        DropdownMenuItem(value: true, child: Text("Newest first")),
-                        DropdownMenuItem(value: false, child: Text("Oldest first")),
+                        DropdownMenuItem(
+                            value: true, child: Text("Newest first")),
+                        DropdownMenuItem(
+                            value: false, child: Text("Oldest first")),
                       ],
                       onChanged: (val) {
                         if (val != null) settings.setSortOrder(val);
@@ -79,8 +81,10 @@ class ResponsivePostGrid extends StatelessWidget {
                 // Używamy wersji .count lub .extent bezpośrednio,
                 // ale musimy obsłużyć przewijanie przez CustomScrollView
                 child: MasonryGridView.extent(
-                  shrinkWrap: true, // WAŻNE: pozwala gridowi zająć tylko tyle miejsca, ile potrzebuje
-                  physics: const NeverScrollableScrollPhysics(), // Scrollowanie obsługuje CustomScrollView
+                  shrinkWrap:
+                      true, // WAŻNE: pozwala gridowi zająć tylko tyle miejsca, ile potrzebuje
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Scrollowanie obsługuje CustomScrollView
                   maxCrossAxisExtent: 400,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
@@ -110,7 +114,8 @@ class VerticalPostCard extends StatelessWidget {
       elevation: 3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min, // Ważne: zajmuje tyle miejsca ile potrzebuje
+        mainAxisSize:
+            MainAxisSize.min, // Ważne: zajmuje tyle miejsca ile potrzebuje
         children: [
           // 1. Obrazek - Zawsze KWADRAT (Issue 1)
           AspectRatio(
@@ -119,11 +124,14 @@ class VerticalPostCard extends StatelessWidget {
               color: Colors.black12,
               child: post.coverArtUrl != null
                   ? Image.network(
-                post.coverArtUrl!,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.music_note, size: 50, color: Colors.grey)),
-              )
-                  : const Center(child: Icon(Icons.album, size: 50, color: Colors.grey)),
+                      post.coverArtUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const Center(
+                          child: Icon(Icons.music_note,
+                              size: 50, color: Colors.grey)),
+                    )
+                  : const Center(
+                      child: Icon(Icons.album, size: 50, color: Colors.grey)),
             ),
           ),
           // 2. Treść - Pełna długość tekstu (Issue 2)
@@ -134,12 +142,16 @@ class VerticalPostCard extends StatelessWidget {
               children: [
                 SelectableText(
                   fixText(post.title),
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 4),
                 SelectableText(
                   "${fixText(post.artist ?? '')} • ${fixText(post.album ?? '')}",
-                  style: TextStyle(color: Theme.of(context).hintColor, fontSize: 12, fontStyle: FontStyle.italic),
+                  style: TextStyle(
+                      color: Theme.of(context).hintColor,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic),
                 ),
                 const Divider(height: 20),
                 // Tekst recenzji w całości
@@ -151,11 +163,14 @@ class VerticalPostCard extends StatelessWidget {
                 Row(
                   children: [
                     const Icon(Icons.star, size: 18, color: kMiamiAmberColor),
-                    Text(" ${post.rating}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    Text(" ${post.rating}",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
                     const Spacer(),
                     Text(
                       DateFormat('yyyy-MM-dd').format(post.date),
-                      style: TextStyle(fontSize: 11, color: Theme.of(context).hintColor),
+                      style: TextStyle(
+                          fontSize: 11, color: Theme.of(context).hintColor),
                     ),
                   ],
                 ),
@@ -164,7 +179,10 @@ class VerticalPostCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: SelectableText(
                       "by ${post.user!.name}",
-                      style: TextStyle(fontSize: 11, color: kMiamiAmberColor, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: kMiamiAmberColor,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
               ],

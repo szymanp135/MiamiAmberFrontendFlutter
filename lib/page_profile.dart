@@ -32,9 +32,12 @@ class ProfileScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 30),
                   child: Column(
                     children: [
-                      Icon(Icons.check_circle, size: 80, color: kMiamiAmberColor),
+                      Icon(Icons.check_circle,
+                          size: 80, color: kMiamiAmberColor),
                       SizedBox(height: 10),
-                      Text("You are logged in!", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text("You are logged in!",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -44,7 +47,16 @@ class ProfileScreen extends StatelessWidget {
               const SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.only(left: 16, top: 10, bottom: 8),
-                  child: Text("Following", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: Text("Following",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+              ),
+
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsetsGeometry.all(8),
+                  child: followingGuideWidget(context),
                 ),
               ),
 
@@ -81,7 +93,9 @@ class LoginRegisterScreen extends StatefulWidget {
   @override
   State<LoginRegisterScreen> createState() => _LoginRegisterScreenState();
 }
-class _LoginRegisterScreenState extends State<LoginRegisterScreen> with SingleTickerProviderStateMixin {
+
+class _LoginRegisterScreenState extends State<LoginRegisterScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -100,14 +114,19 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> with SingleTi
       if (isLogin) {
         await auth.login(_usernameController.text, _passwordController.text);
       } else {
-        await ApiService().register(_usernameController.text, _passwordController.text);
-        if(mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Registered! Now login.")));
+        await ApiService()
+            .register(_usernameController.text, _passwordController.text);
+        if (mounted)
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Registered! Now login.")));
         _tabController.animateTo(0);
       }
     } catch (e) {
-      if(mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+      if (mounted)
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Error: $e")));
     } finally {
-      if(mounted) setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -120,9 +139,15 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> with SingleTi
         bottom: TabBar(
           controller: _tabController,
           // Kolory są teraz sterowane przez Theme w main, ale tu można wymusić dla pewności
-          indicatorColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white,
-          labelColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white,
-          unselectedLabelColor: Theme.of(context).brightness == Brightness.dark ? Colors.black54 : Colors.white70,
+          indicatorColor: Theme.of(context).brightness == Brightness.dark
+              ? Colors.black
+              : Colors.white,
+          labelColor: Theme.of(context).brightness == Brightness.dark
+              ? Colors.black
+              : Colors.white,
+          unselectedLabelColor: Theme.of(context).brightness == Brightness.dark
+              ? Colors.black54
+              : Colors.white70,
           tabs: const [Tab(text: "Login"), Tab(text: "Register")],
         ),
       ),
@@ -145,14 +170,25 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> with SingleTi
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextField(controller: _usernameController, decoration: const InputDecoration(labelText: "Username", border: OutlineInputBorder())),
+          TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(
+                  labelText: "Username", border: OutlineInputBorder())),
           const SizedBox(height: 16),
-          TextField(controller: _passwordController, decoration: const InputDecoration(labelText: "Password", border: OutlineInputBorder()), obscureText: true, onSubmitted: (_) => _handleAuth(isLogin)),
+          TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                  labelText: "Password", border: OutlineInputBorder()),
+              obscureText: true,
+              onSubmitted: (_) => _handleAuth(isLogin)),
           const SizedBox(height: 24),
           FilledButton(
             onPressed: _isLoading ? null : () => _handleAuth(isLogin),
-            style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
-            child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : Text(isLogin ? "Login" : "Register"),
+            style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16)),
+            child: _isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Text(isLogin ? "Login" : "Register"),
           ),
         ],
       ),
@@ -173,7 +209,8 @@ class _FollowingSliverListState extends State<FollowingSliverList> {
 
   void _refresh() {
     setState(() {
-      _refreshKey = UniqueKey(); // Zmiana klucza zmusza widget do ponownego pobrania danych
+      _refreshKey =
+          UniqueKey(); // Zmiana klucza zmusza widget do ponownego pobrania danych
     });
   }
 
@@ -194,18 +231,22 @@ class _FollowingSliverListState extends State<FollowingSliverList> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SliverToBoxAdapter(
-                child: Center(child: Padding(
+                child: Center(
+                    child: Padding(
                   padding: EdgeInsets.all(20.0),
                   child: CircularProgressIndicator(),
                 )),
               );
             }
 
-            if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+            if (snapshot.hasError ||
+                !snapshot.hasData ||
+                snapshot.data!.isEmpty) {
               return const SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Text("You don't follow anyone yet.", textAlign: TextAlign.center),
+                  child: Text("You don't follow anyone yet.",
+                      textAlign: TextAlign.center),
                 ),
               );
             }
@@ -214,7 +255,7 @@ class _FollowingSliverListState extends State<FollowingSliverList> {
 
             return SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   final user = following[index];
                   return ListTile(
                     leading: const CircleAvatar(
@@ -248,4 +289,38 @@ class _FollowingSliverListState extends State<FollowingSliverList> {
       },
     );
   }
+}
+
+String followingGuide = """To follow a user go to users page and check Follow checkbox.""";
+
+Widget followingGuideWidget(BuildContext context) {
+  final theme = Theme.of(context);
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: kMiamiAmberColor,
+      borderRadius: BorderRadius.circular(8),
+      boxShadow: const [
+        BoxShadow(
+            blurRadius: 4, color: Colors.black26, offset: Offset(2, 2))
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Following Guide",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: theme.canvasColor)),
+        Divider(color: theme.canvasColor),
+        Text(followingGuide,
+            style: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 13,
+                color: theme.canvasColor,
+                height: 1.5)),
+      ],
+    ),
+  );
 }

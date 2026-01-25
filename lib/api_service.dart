@@ -29,7 +29,7 @@ class ApiService {
 
   Future<int?> getCurrentUserId() async {
     final prefs = await SharedPreferences.getInstance();
-    if(prefs.getInt('userId') == null) {
+    if (prefs.getInt('userId') == null) {
       prefs.clear();
       throw Exception('Not logged in');
     }
@@ -111,7 +111,7 @@ class ApiService {
     final response = await http.get(
       Uri.parse('$baseUrl/users/$user_id/following'),
     );
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else if (response.statusCode == 404) {
       throw Exception('User not found');
@@ -134,7 +134,7 @@ class ApiService {
     );
 
     if (response.statusCode != 200) {
-      if (response.statusCode == 400 && response.body.contains('Already')){
+      if (response.statusCode == 400 && response.body.contains('Already')) {
         throw Exception('Already following this user');
       }
       throw Exception('Failed to follow user: ${response.body}');
@@ -155,7 +155,7 @@ class ApiService {
     );
 
     if (response.statusCode != 200) {
-      if (response.statusCode == 400 && response.body.contains('Already')){
+      if (response.statusCode == 400 && response.body.contains('Already')) {
         throw Exception('Already not following this user');
       }
       throw Exception('Failed to unfollow user: ${response.body}');
@@ -207,7 +207,8 @@ class ApiService {
 
   // Funkcja MusicBrainz z index.html przepisana na Dart
   Future<Map<String, dynamic>> fetchMusicBrainzData(String mbid) async {
-    final url = "https://musicbrainz.org/ws/2/release/$mbid?inc=artists+tags&fmt=json";
+    final url =
+        "https://musicbrainz.org/ws/2/release/$mbid?inc=artists+tags&fmt=json";
     final response = await http.get(
       Uri.parse(url),
       headers: {"User-Agent": "MiamiAmber/1.0 (contact@miami.monster)"},
@@ -238,10 +239,16 @@ class ApiService {
   String _decodeBase64(String str) {
     String output = str.replaceAll('-', '+').replaceAll('_', '/');
     switch (output.length % 4) {
-      case 0: break;
-      case 2: output += '=='; break;
-      case 3: output += '='; break;
-      default: throw Exception('Illegal base64url string!"');
+      case 0:
+        break;
+      case 2:
+        output += '==';
+        break;
+      case 3:
+        output += '=';
+        break;
+      default:
+        throw Exception('Illegal base64url string!"');
     }
     return utf8.decode(base64Url.decode(output));
   }

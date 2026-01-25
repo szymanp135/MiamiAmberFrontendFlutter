@@ -33,11 +33,17 @@ class AuthProvider with ChangeNotifier {
   String? _token;
   bool get isLoggedIn => _isLoggedIn;
 
-  AuthProvider() { _checkLoginStatus(); }
+  AuthProvider() {
+    _checkLoginStatus();
+  }
 
   Future<void> _checkLoginStatus() async {
     final token = await ApiService().getToken();
-    if (token != null) { _token = token; _isLoggedIn = true; notifyListeners(); }
+    if (token != null) {
+      _token = token;
+      _isLoggedIn = true;
+      notifyListeners();
+    }
   }
 
   Future<void> login(String username, String password) async {

@@ -47,7 +47,9 @@ class _SettingsTabContent extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.sort),
                 title: const Text("Default Sort Order"),
-                subtitle: Text(settingsProvider.sortNewestFirst ? "Newest posts first" : "Oldest posts first"),
+                subtitle: Text(settingsProvider.sortNewestFirst
+                    ? "Newest posts first"
+                    : "Oldest posts first"),
                 trailing: Switch(
                   value: settingsProvider.sortNewestFirst,
                   activeColor: kMiamiAmberColor,
@@ -56,7 +58,9 @@ class _SettingsTabContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Center(child: Text('Miami Amber App $versionText', style: TextStyle(color: Colors.grey))),
+            const Center(
+                child: Text('Miami Amber App $versionText',
+                    style: TextStyle(color: Colors.grey))),
           ],
         ),
       ),
