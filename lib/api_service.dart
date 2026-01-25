@@ -31,7 +31,6 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     if(prefs.getInt('userId') == null) {
       prefs.clear();
-      throw Exception('Outdated/invalid cached data');
     }
     return prefs.getInt('userId');
   }

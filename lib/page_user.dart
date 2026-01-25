@@ -6,14 +6,28 @@ import 'constants.dart';
 import 'models.dart';
 
 class UserSearchScreen extends StatefulWidget {
-  const UserSearchScreen({super.key});
+  final String? initialUsername; // Dodaj to pole
+  const UserSearchScreen({super.key, this.initialUsername}); // I tutaj
+
   @override
   State<UserSearchScreen> createState() => _UserSearchScreenState();
 }
+
 class _UserSearchScreenState extends State<UserSearchScreen> {
   final _searchController = TextEditingController();
   Map<String, dynamic>? _userData;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Jeśli przekazano nazwę użytkownika, wpisz ją do pola i szukaj
+    if (widget.initialUsername != null) {
+      _searchController.text = widget.initialUsername!;
+      // Używamy WidgetsBinding, aby odpalić szukanie zaraz po zbudowaniu widgetu
+      WidgetsBinding.instance.addPostFrameCallback((_) => _search());
+    }
+  }
 
   Future<void> _search() async {
     if (_searchController.text.isEmpty) return;
@@ -127,7 +141,6 @@ class _UserHeaderState extends State<UserHeader> {
         });
       }
     } catch (e) {
-      print("Header status error: $e");
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -192,7 +205,7 @@ class _UserHeaderState extends State<UserHeader> {
 
           // Logika wyświetlania przycisku
           if (_isMe)
-            const Chip(label: Text("This is your profile"))
+            const Chip(label: Text("This is my profile"))
           else if (_isLoading)
             const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
           else
