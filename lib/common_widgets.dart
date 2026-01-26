@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:intl/intl.dart';
 import 'package:miami_amber_flutter_frontend/providers.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'constants.dart';
 import 'models.dart';
@@ -186,7 +188,7 @@ class VerticalPostCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: SelectableText(
                       "by ${post.user!.name}",
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 11,
                           color: kMiamiAmberColor,
                           fontWeight: FontWeight.bold),
@@ -195,6 +197,68 @@ class VerticalPostCard extends StatelessWidget {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class LinkableText extends StatelessWidget {
+  const LinkableText({super.key, required this.text1, required this.text2,
+    required this.text3, required this.url, required this.textStyle});
+
+  final String text1;
+  final String text2;
+  final String text3;
+  final String url;
+  final TextStyle textStyle;
+
+  Future<void> _launchUrl(String url, BuildContext context) async {
+    final Uri uri = Uri.parse(url);
+    // Sprawdź, czy system w ogóle raportuje możliwość otwarcia linku
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(
+          uri,
+          mode: LaunchMode
+              .externalApplication, // Wymusza otwarcie w zewnętrznej przeglądarce
+        );
+      } else {
+        throw Exception('Couldn\'t open link $url');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error: $e')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isBright = theme.brightness == Brightness.dark ? false : true;
+    final multiplier = isBright ? 1.33 : 0.5;
+    final themeColor = Theme.of(context).colorScheme.primary;
+    final linkColor = themeColor.withValues(
+      red: themeColor.r * multiplier,
+      green: themeColor.g * multiplier,
+      blue: themeColor.b * multiplier
+    );
+
+    return RichText(
+      text: TextSpan(
+        style: textStyle,
+        children: [
+          TextSpan(text: text1),
+          TextSpan(
+            text: text2,
+            style: textStyle.copyWith(
+              color: linkColor,
+              decoration: TextDecoration.underline,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => _launchUrl(url, context),
+          ),
+          TextSpan(text: text3),
         ],
       ),
     );

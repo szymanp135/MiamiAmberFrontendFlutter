@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:miami_amber_flutter_frontend/common_widgets.dart';
 import 'package:miami_amber_flutter_frontend/providers.dart';
 import 'package:provider/provider.dart';
 
@@ -24,8 +25,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   double _rating = 50;
   bool _isLoading = false;
 
-  final String postingGuide =
-      """To fill in artist, album and tags data enter album's MusicBrainz ID in MBID label and press "Load" button.""";
+  final String postingGuidePreface =
+  """To fill in artist, album and tags data enter album's MusicBrainz ID in MBID label and press "Load" button.""";
+
+  final String postingGuide1 = """To find album's MusicBrainz ID search for it at """;
+  final String postingGuide2 = """musicbrainz.org""";
+  final String postingGuideUrl = """https://musicbrainz.org/search""";
+  final String postingGuide3 = """. When you find your album choose it's release and then in "Details" tab copy MBID value.""";
   final String ratingGuide = """
 0 worst of all time
 10 close to as horrible as it gets
@@ -70,9 +76,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       _artistController.text = artistCredits.map((a) => a['name']).join(', ');
       _tagsController.text = tags;
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Error: $e")));
+      }
       success = false;
     } finally {
       setState(() => _isLoading = false);
@@ -119,9 +126,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         setState(() => _rating = 50);
       }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Error: $e")));
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -152,12 +160,30 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       fontSize: 16,
                       color: theme.canvasColor)),
               Divider(color: theme.canvasColor),
-              Text(postingGuide,
+              /*Text(postingGuide,
+                  style: TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 13,
+                      color: theme.canvasColor,
+                      height: 1.5)),*/
+              Text(postingGuidePreface,
                   style: TextStyle(
                       fontFamily: 'monospace',
                       fontSize: 13,
                       color: theme.canvasColor,
                       height: 1.5)),
+              Divider(color: theme.canvasColor),
+              LinkableText(
+                text1: postingGuide1,
+                text2: postingGuide2,
+                text3: postingGuide3,
+                url: postingGuideUrl,
+                textStyle: TextStyle(
+                    fontFamily: 'monospace',
+                    fontSize: 13,
+                    color: theme.canvasColor,
+                    height: 1.5),
+              ),
             ],
           ),
         );

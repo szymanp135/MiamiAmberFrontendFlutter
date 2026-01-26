@@ -5,7 +5,9 @@ import 'package:miami_amber_flutter_frontend/providers.dart';
 import 'package:provider/provider.dart';
 
 import 'api_service.dart';
+import 'common_widgets.dart';
 import 'constants.dart';
+import 'models.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -20,13 +22,12 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Profile")),
-      // CustomScrollView pozwala na łączenie różnych efektów scrollowania
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 1000),
           child: CustomScrollView(
             slivers: [
-              // 1. Sekcja nagłówka (Logo i status)
+              // Logo and status
               const SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 30),
@@ -43,30 +44,10 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
 
-              // 2. Sekcja "Obserwowani" (Nagłówek sekcji)
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 16, top: 10, bottom: 8),
-                  child: Text("Following",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ),
-              ),
-
+              // Logout button
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsetsGeometry.all(8),
-                  child: followingGuideWidget(context),
-                ),
-              ),
-
-              // 3. Dynamiczna lista obserwowanych
-              const FollowingSliverList(),
-
-              // 4. Przycisk Logout na dole
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(32.0),
+                  padding: const EdgeInsets.only(left: 32, right: 32, bottom: 32, top: 8),
                   child: ElevatedButton.icon(
                     onPressed: () => auth.logout(),
                     icon: const Icon(Icons.logout),
@@ -79,7 +60,24 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
 
-              // Miejsce na Twoje "późniejsze plany" - po prostu dodawaj kolejne Slivery tutaj
+              // Following header
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 16, top: 10, bottom: 8),
+                  child: Text("Following",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              // Following guide
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsetsGeometry.all(8),
+                  child: followingGuideWidget(context),
+                ),
+              ),
+              // Following list
+              const FollowingSliverList(),
             ],
           ),
         ),
@@ -245,7 +243,7 @@ class _FollowingSliverListState extends State<FollowingSliverList> {
               return const SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Text("You don't follow anyone yet.",
+                  child: Text("Follow someone to display their name here.",
                       textAlign: TextAlign.center),
                 ),
               );
@@ -324,3 +322,51 @@ Widget followingGuideWidget(BuildContext context) {
     ),
   );
 }
+
+/*class YourPostsList extends StatefulWidget {
+  const YourPostsList({super.key});
+  @override
+  State<YourPostsList> createState() => _YourPostsStateList();
+}
+
+class _YourPostsStateList extends State<YourPostsList> {
+  late Future<List<Post>> _postsFuture;
+  late Future<int?> _currentUserId;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshPosts();
+  }
+
+  void _refreshPosts() async {
+    setState(() {
+      _postsFuture = ApiService().getPosts();
+      _currentUserId = ApiService().getCurrentUserId();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Post>>(
+      future: _postsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: SelectableText('Error: ${snapshot.error}'));
+        }
+        return FutureBuilder(
+            future: _currentUserId,
+            builder: (context, snapshotUser) {
+              int id = snapshotUser.data ?? -1;
+              final posts = snapshot.data ?? [];
+              final postsFiltered = posts.where((a) => a.user!.id == id).toList();
+              return ResponsivePostGrid(posts: postsFiltered);
+            }
+        );
+      },
+    );
+  }
+}*/
