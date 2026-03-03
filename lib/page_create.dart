@@ -70,6 +70,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           })
           .map((t) => t['name'].toString())
           .toSet(); // toSet() usunie duplikaty (np. 'vaporwave' u obu artystów)
+      for (var tag in data['tags']) {
+        allTags.add(tag['name']);
+      }
       final tags = allTags.isEmpty ? '' : allTags.join(', ');
 
       _albumController.text = data['title'];
