@@ -99,6 +99,17 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  fonts:
+    - family: Computer Modern
+      fonts:
+        - asset: assets/fonts/computer_modern/cmunrm.ttf
+        - asset: assets/fonts/computer_modern/cmunsl.ttf
+          style: italic
+        - asset: assets/fonts/computer_modern/cmunbx.ttf
+          weight: 700
+        - asset: assets/fonts/computer_modern/cmunbl.ttf
+          style: italic
+          weight: 700
 
 flutter_launcher_icons:
   image_path: "assets/logo.png" # Ścieżka do Twojego dużego logo

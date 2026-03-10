@@ -40,6 +40,7 @@ class MiamiAmberApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.light,
         scaffoldBackgroundColor: kLightBgColor,
+        fontFamily: 'Computer Modern',
         colorScheme: ColorScheme.fromSeed(
             seedColor: kMiamiAmberColor,
             brightness: Brightness.light,
@@ -59,6 +60,7 @@ class MiamiAmberApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
         scaffoldBackgroundColor: kDarkBgColor,
+        fontFamily: 'Computer Modern',
         colorScheme: ColorScheme.fromSeed(
             seedColor: kMiamiAmberColor,
             brightness: Brightness.dark,
