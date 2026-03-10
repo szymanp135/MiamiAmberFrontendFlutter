@@ -21,7 +21,7 @@ class ProfileScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile")),
+      appBar: AppBar(title: const Text("Profile", style: pageTitleTextStyle)),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 1000),
@@ -313,11 +313,7 @@ Widget followingGuideWidget(BuildContext context) {
                 color: theme.canvasColor)),
         Divider(color: theme.canvasColor),
         Text(followingGuide,
-            style: TextStyle(
-                fontFamily: 'monospace',
-                fontSize: 13,
-                color: theme.canvasColor,
-                height: 1.5)),
+            style: guideTextStyle(theme)),
       ],
     ),
   );

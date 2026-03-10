@@ -110,6 +110,9 @@ flutter:
         - asset: assets/fonts/computer_modern/cmunbl.ttf
           style: italic
           weight: 700
+    - family: Computer Modern Typewriter
+      fonts:
+        - asset: assets/fonts/computer_modern/cmuntt.ttf
 
 flutter_launcher_icons:
   image_path: "assets/logo.png" # Ścieżka do Twojego dużego logo

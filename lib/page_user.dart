@@ -58,7 +58,7 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Find User")),
+      appBar: AppBar(title: const Text("Find User", style: pageTitleTextStyle)),
       body: Column(
         children: [
           Center(

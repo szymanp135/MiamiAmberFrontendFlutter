@@ -61,6 +61,11 @@ class MiamiAmberApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: kDarkBgColor,
         fontFamily: 'Computer Modern',
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(fontSize: 24),
+          bodyLarge: TextStyle(fontSize: 16),
+          labelMedium: TextStyle(fontSize: 14),
+        ),
         colorScheme: ColorScheme.fromSeed(
             seedColor: kMiamiAmberColor,
             brightness: Brightness.dark,

@@ -53,7 +53,7 @@ class ResponsivePostGrid extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('Posts: ${sortedPosts.length}'),
+                    Text('Posts: ${sortedPosts.length}', style: const TextStyle(fontSize: 14)),
                     const SizedBox(width: 24),
                     const Text("Sort by: "),
                     DropdownButton<SortingType>(
@@ -152,21 +152,21 @@ class VerticalPostCard extends StatelessWidget {
                 SelectableText(
                   fixText(post.title),
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 4),
                 SelectableText(
                   "${fixText(post.artist ?? '')} • ${fixText(post.album ?? '')}",
                   style: TextStyle(
                       color: Theme.of(context).hintColor,
-                      fontSize: 12,
+                      fontSize: 13,
                       fontStyle: FontStyle.italic),
                 ),
                 const Divider(height: 20),
                 // Tekst recenzji w całości
                 SelectableText(
                   fixText(post.text),
-                  style: const TextStyle(fontSize: 14, height: 1.4),
+                  style: const TextStyle(fontSize: 15, height: 1.4),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -244,23 +244,31 @@ class LinkableText extends StatelessWidget {
       blue: themeColor.b * multiplier
     );
 
-    return RichText(
-      text: TextSpan(
+    return Text.rich(
+      TextSpan(
         style: textStyle,
         children: [
-          TextSpan(text: text1),
+          TextSpan(text: text1, style: textStyle),
           TextSpan(
             text: text2,
             style: textStyle.copyWith(
+              fontFamily: 'Computer Modern Typewriter',
               color: linkColor,
               decoration: TextDecoration.underline,
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () => _launchUrl(url, context),
           ),
-          TextSpan(text: text3),
+          TextSpan(text: text3, style: textStyle),
         ],
       ),
     );
   }
 }
+
+TextStyle guideTextStyle(ThemeData theme) => TextStyle(
+  //fontFamily: 'Computer Modern Typewriter',
+    fontSize: 14,
+    color: theme.canvasColor,
+    height: 1.5
+);

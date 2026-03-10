@@ -163,29 +163,15 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       fontSize: 16,
                       color: theme.canvasColor)),
               Divider(color: theme.canvasColor),
-              /*Text(postingGuide,
-                  style: TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 13,
-                      color: theme.canvasColor,
-                      height: 1.5)),*/
               Text(postingGuidePreface,
-                  style: TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 13,
-                      color: theme.canvasColor,
-                      height: 1.5)),
+                  style: guideTextStyle(theme)),
               Divider(color: theme.canvasColor),
               LinkableText(
                 text1: postingGuide1,
                 text2: postingGuide2,
                 text3: postingGuide3,
                 url: postingGuideUrl,
-                textStyle: TextStyle(
-                    fontFamily: 'monospace',
-                    fontSize: 13,
-                    color: theme.canvasColor,
-                    height: 1.5),
+                textStyle: guideTextStyle(theme),
               ),
             ],
           ),
@@ -211,11 +197,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       color: theme.canvasColor)),
               Divider(color: theme.canvasColor),
               Text(ratingGuide,
-                  style: TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 13,
-                      color: theme.canvasColor,
-                      height: 1.5)),
+                  style: guideTextStyle(theme)),
             ],
           ),
         );
@@ -240,17 +222,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       color: theme.canvasColor)),
               Divider(color: theme.canvasColor),
               Text(taggingGuide,
-                  style: TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 13,
-                      color: theme.canvasColor,
-                      height: 1.5)),
+                  style: guideTextStyle(theme)),
             ],
           ),
         );
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Create Review")),
+      appBar: AppBar(title: const Text("Create Review", style: pageTitleTextStyle)),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: isWide ? 1000 : 600),

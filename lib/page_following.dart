@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'api_service.dart';
 import 'common_widgets.dart';
+import 'constants.dart';
 import 'models.dart';
 
 class FollowingScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _FollwingScreenState extends State<FollowingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Following'),
+        title: const Text('Following', style: pageTitleTextStyle),
       ),
       body: FutureBuilder<List<Post>>(
         future: _postsFuture,

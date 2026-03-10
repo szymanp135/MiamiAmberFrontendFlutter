@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'api_service.dart';
 import 'common_widgets.dart';
+import 'constants.dart';
 import 'models.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Miami Amber'),
+        title: const Text('Miami Amber', style: pageTitleTextStyle),
       ),
       body: FutureBuilder<List<Post>>(
         future: _postsFuture,
