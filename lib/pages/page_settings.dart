@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:miami_amber_flutter_frontend/providers.dart';
+import 'package:miami_amber_frontend/constants.dart';
+import 'package:miami_amber_frontend/providers/settings_provider.dart';
+import 'package:miami_amber_frontend/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-
-import 'api_service.dart';
-import 'constants.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -51,13 +50,17 @@ class _SettingsTabContent extends StatelessWidget {
                   value: settingsProvider.sortingType,
                   items: const [
                     DropdownMenuItem(
-                        value: SortingType.byNewest, child: Text("Newest first")),
+                        value: SortingType.byNewest,
+                        child: Text("Newest first")),
                     DropdownMenuItem(
-                        value: SortingType.byOldest, child: Text("Oldest first")),
+                        value: SortingType.byOldest,
+                        child: Text("Oldest first")),
                     DropdownMenuItem(
-                        value: SortingType.byMostRated, child: Text("Most Rated first")),
+                        value: SortingType.byMostRated,
+                        child: Text("Most Rated first")),
                     DropdownMenuItem(
-                        value: SortingType.byLeastRated, child: Text("Least Rated first")),
+                        value: SortingType.byLeastRated,
+                        child: Text("Least Rated first")),
                   ],
                   onChanged: (val) {
                     if (val != null) {
@@ -69,7 +72,7 @@ class _SettingsTabContent extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Center(
-                child: Text('Miami Amber App $versionText',
+                child: SelectableText('Miami Amber App $versionText',
                     style: TextStyle(color: Colors.grey))),
           ],
         ),

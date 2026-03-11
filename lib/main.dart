@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:miami_amber_flutter_frontend/page_create.dart';
-import 'package:miami_amber_flutter_frontend/page_following.dart';
-import 'package:miami_amber_flutter_frontend/page_home.dart';
-import 'package:miami_amber_flutter_frontend/page_profile.dart';
-import 'package:miami_amber_flutter_frontend/page_settings.dart';
-import 'package:miami_amber_flutter_frontend/page_user.dart';
-import 'package:miami_amber_flutter_frontend/providers.dart';
+import 'package:miami_amber_frontend/pages/page_create.dart';
+import 'package:miami_amber_frontend/pages/page_following.dart';
+import 'package:miami_amber_frontend/pages/page_home.dart';
+import 'package:miami_amber_frontend/pages/page_profile.dart';
+import 'package:miami_amber_frontend/pages/page_settings.dart';
+import 'package:miami_amber_frontend/pages/page_user.dart';
+import 'package:miami_amber_frontend/providers/auth_provider.dart';
+import 'package:miami_amber_frontend/providers/settings_provider.dart';
+import 'package:miami_amber_frontend/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
@@ -64,7 +66,7 @@ class MiamiAmberApp extends StatelessWidget {
         textTheme: const TextTheme(
           titleLarge: TextStyle(fontSize: 24),
           bodyLarge: TextStyle(fontSize: 16),
-          labelMedium: TextStyle(fontSize: 14),
+          labelMedium: TextStyle(fontSize: 13),
         ),
         colorScheme: ColorScheme.fromSeed(
             seedColor: kMiamiAmberColor,

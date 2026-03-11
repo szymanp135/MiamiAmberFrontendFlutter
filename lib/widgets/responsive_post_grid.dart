@@ -1,17 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:intl/intl.dart';
-import 'package:miami_amber_flutter_frontend/providers.dart';
+import 'package:miami_amber_frontend/api/models.dart';
+import 'package:miami_amber_frontend/constants.dart';
+import 'package:miami_amber_frontend/providers/settings_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import 'constants.dart';
-import 'models.dart';
-
-// --- Helper do naprawy znaków HTML ---
 final unescape = HtmlUnescape();
 String fixText(String text) => unescape.convert(text);
 
@@ -31,11 +26,15 @@ class ResponsivePostGrid extends StatelessWidget {
 
     final sortedPosts = List<Post>.from(posts);
     sortedPosts.sort((a, b) {
-      switch(settings.sortingType){
-        case SortingType.byNewest: return b.date.compareTo(a.date);
-        case SortingType.byOldest: return a.date.compareTo(b.date);
-        case SortingType.byMostRated: return b.rating!.compareTo(a.rating!);
-        case SortingType.byLeastRated: return a.rating!.compareTo(b.rating!);
+      switch (settings.sortingType) {
+        case SortingType.byNewest:
+          return b.date.compareTo(a.date);
+        case SortingType.byOldest:
+          return a.date.compareTo(b.date);
+        case SortingType.byMostRated:
+          return b.rating!.compareTo(a.rating!);
+        case SortingType.byLeastRated:
+          return a.rating!.compareTo(b.rating!);
       }
     });
 
@@ -53,20 +52,25 @@ class ResponsivePostGrid extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('Posts: ${sortedPosts.length}', style: const TextStyle(fontSize: 14)),
+                    Text('Posts: ${sortedPosts.length}',
+                        style: const TextStyle(fontSize: 14)),
                     const SizedBox(width: 24),
                     const Text("Sort by: "),
                     DropdownButton<SortingType>(
                       value: settings.sortingType,
                       items: const [
                         DropdownMenuItem(
-                            value: SortingType.byNewest, child: Text("Newest first")),
+                            value: SortingType.byNewest,
+                            child: Text("Newest first")),
                         DropdownMenuItem(
-                            value: SortingType.byOldest, child: Text("Oldest first")),
+                            value: SortingType.byOldest,
+                            child: Text("Oldest first")),
                         DropdownMenuItem(
-                            value: SortingType.byMostRated, child: Text("Most Rated first")),
+                            value: SortingType.byMostRated,
+                            child: Text("Most Rated first")),
                         DropdownMenuItem(
-                            value: SortingType.byLeastRated, child: Text("Least Rated first")),
+                            value: SortingType.byLeastRated,
+                            child: Text("Least Rated first")),
                       ],
                       onChanged: (val) {
                         if (val != null) {
@@ -202,73 +206,3 @@ class VerticalPostCard extends StatelessWidget {
     );
   }
 }
-
-class LinkableText extends StatelessWidget {
-  const LinkableText({super.key, required this.text1, required this.text2,
-    required this.text3, required this.url, required this.textStyle});
-
-  final String text1;
-  final String text2;
-  final String text3;
-  final String url;
-  final TextStyle textStyle;
-
-  Future<void> _launchUrl(String url, BuildContext context) async {
-    final Uri uri = Uri.parse(url);
-    // Sprawdź, czy system w ogóle raportuje możliwość otwarcia linku
-    try {
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(
-          uri,
-          mode: LaunchMode
-              .externalApplication, // Wymusza otwarcie w zewnętrznej przeglądarce
-        );
-      } else {
-        throw Exception('Couldn\'t open link $url');
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $e')));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isBright = theme.brightness == Brightness.dark ? false : true;
-    final multiplier = isBright ? 1.33 : 0.5;
-    final themeColor = Theme.of(context).colorScheme.primary;
-    final linkColor = themeColor.withValues(
-      red: themeColor.r * multiplier,
-      green: themeColor.g * multiplier,
-      blue: themeColor.b * multiplier
-    );
-
-    return Text.rich(
-      TextSpan(
-        style: textStyle,
-        children: [
-          TextSpan(text: text1, style: textStyle),
-          TextSpan(
-            text: text2,
-            style: textStyle.copyWith(
-              fontFamily: 'Computer Modern Typewriter',
-              color: linkColor,
-              decoration: TextDecoration.underline,
-            ),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => _launchUrl(url, context),
-          ),
-          TextSpan(text: text3, style: textStyle),
-        ],
-      ),
-    );
-  }
-}
-
-TextStyle guideTextStyle(ThemeData theme) => TextStyle(
-  //fontFamily: 'Computer Modern Typewriter',
-    fontSize: 14,
-    color: theme.canvasColor,
-    height: 1.5
-);

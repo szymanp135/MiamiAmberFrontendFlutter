@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'api_service.dart';
-import 'common_widgets.dart';
-import 'constants.dart';
-import 'models.dart';
+import 'package:miami_amber_frontend/api/api_service.dart';
+import 'package:miami_amber_frontend/api/models.dart';
+import 'package:miami_amber_frontend/constants.dart';
+import 'package:miami_amber_frontend/widgets/responsive_post_grid.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,10 +35,12 @@ class _HomeScreenState extends State<HomeScreen>
       body: FutureBuilder<List<Post>>(
         future: _postsFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError)
+          }
+          if (snapshot.hasError) {
             return Center(child: SelectableText('Error: ${snapshot.error}'));
+          }
           return ResponsivePostGrid(posts: snapshot.data ?? []);
         },
       ),

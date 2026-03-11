@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'api_service.dart';
-import 'common_widgets.dart';
-import 'constants.dart';
-import 'models.dart';
+import 'package:miami_amber_frontend/api/api_service.dart';
+import 'package:miami_amber_frontend/api/models.dart';
+import 'package:miami_amber_frontend/constants.dart';
+import 'package:miami_amber_frontend/widgets/responsive_post_grid.dart';
 
 class FollowingScreen extends StatefulWidget {
   const FollowingScreen({super.key});
@@ -36,10 +34,16 @@ class _FollwingScreenState extends State<FollowingScreen> {
       body: FutureBuilder<List<Post>>(
         future: _postsFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError)
-            return Center(child: SelectableText('Error: ${snapshot.error}'));
+          }
+          if (snapshot.hasError) {
+            if (!ApiService().isLoggedIn) {
+              return const Center(child: SelectableText('Not logged in.'));
+            }
+            return Center(
+                child: SelectableText('Error: ${snapshot.error.toString()}'));
+          }
           return ResponsivePostGrid(posts: snapshot.data ?? []);
         },
       ),

@@ -6,8 +6,17 @@ import 'models.dart';
 class ApiService {
   static const String baseUrl = "https://amber.miami.monster/api";
 
+  bool _isLoggedIn = false;
+  bool get isLoggedIn => _isLoggedIn;
+
+  int _currentUserId = -1;
+  int get currentUserId => _currentUserId;
+
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('jwt') != null) {
+      _isLoggedIn = true;
+    }
     return prefs.getString('jwt');
   }
 
@@ -18,6 +27,7 @@ class ApiService {
     Map<String, dynamic> payload = _parseJwt(token);
     if (payload.containsKey('id')) {
       await prefs.setInt('userId', payload['id']);
+      _isLoggedIn = true;
     }
   }
 
@@ -25,14 +35,18 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('jwt');
     await prefs.remove('userId');
+    _isLoggedIn = false;
+    _currentUserId = -1;
   }
 
   Future<int?> getCurrentUserId() async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getInt('userId') == null) {
       prefs.clear();
+      _isLoggedIn = false;
       throw Exception('Not logged in');
     }
+    _isLoggedIn = true;
     return prefs.getInt('userId');
   }
 
@@ -47,6 +61,11 @@ class ApiService {
       final data = jsonDecode(response.body);
       String token = data['token'];
       await saveToken(token);
+
+      _currentUserId = await getCurrentUserId() ?? -1;
+      if (_currentUserId == -1) {
+        await removeToken();
+      }
       return data;
     } else {
       throw Exception('Login failed: ${response.body}');

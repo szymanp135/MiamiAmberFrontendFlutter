@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:miami_amber_flutter_frontend/common_widgets.dart';
-import 'package:miami_amber_flutter_frontend/providers.dart';
+import 'package:miami_amber_frontend/api/api_service.dart';
+import 'package:miami_amber_frontend/api/models.dart';
+import 'package:miami_amber_frontend/constants.dart';
+import 'package:miami_amber_frontend/providers/auth_provider.dart';
+import 'package:miami_amber_frontend/widgets/guide_widget.dart';
+import 'package:miami_amber_frontend/widgets/linkable_text.dart';
 import 'package:provider/provider.dart';
-
-import 'api_service.dart';
-import 'constants.dart';
-import 'models.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -26,12 +25,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool _isLoading = false;
 
   final String postingGuidePreface =
-  """To fill in artist, album and tags data enter album's MusicBrainz ID in MBID label and press "Load" button.""";
+      """To fill in artist, album and tags data enter album's MusicBrainz ID in MBID label and press "Load" button.""";
 
-  final String postingGuide1 = """To find album's MusicBrainz ID search for it at """;
+  final String postingGuide1 =
+      """To find album's MusicBrainz ID search for it at """;
   final String postingGuide2 = """musicbrainz.org""";
   final String postingGuideUrl = """https://musicbrainz.org/search""";
-  final String postingGuide3 = """. When you find your album choose it's release and then in "Details" tab copy MBID value.""";
+  final String postingGuide3 =
+      """. When you find your album choose it's release and then in "Details" tab copy MBID value.""";
   final String ratingGuide = """
 0 worst of all time
 10 close to as horrible as it gets
@@ -138,97 +139,31 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
+  Widget _ratingGuideWidget() =>
+      GuideWidget(title: "Rating Guide", text: ratingGuide);
+  Widget _tagGuideWidget() =>
+      GuideWidget(title: "Tagging Guide", text: taggingGuide);
+  Widget _postGuideWidget(ThemeData theme) => GuideWidget(
+        title: 'Posting Guide',
+        text: postingGuidePreface,
+        linkableText: LinkableText(
+          text1: postingGuide1,
+          text2: postingGuide2,
+          text3: postingGuide3,
+          url: postingGuideUrl,
+          textStyle: guideTextStyle(theme),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     // Sprawdzamy, czy mamy wystarczająco dużo miejsca na układ poziomy
     final bool isWide = MediaQuery.of(context).size.width > 800;
     final theme = Theme.of(context);
 
-    Widget postGuideWidget() => Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: kMiamiAmberColor,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: const [
-              BoxShadow(
-                  blurRadius: 4, color: Colors.black26, offset: Offset(2, 2))
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Posting Guide",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: theme.canvasColor)),
-              Divider(color: theme.canvasColor),
-              Text(postingGuidePreface,
-                  style: guideTextStyle(theme)),
-              Divider(color: theme.canvasColor),
-              LinkableText(
-                text1: postingGuide1,
-                text2: postingGuide2,
-                text3: postingGuide3,
-                url: postingGuideUrl,
-                textStyle: guideTextStyle(theme),
-              ),
-            ],
-          ),
-        );
-
-    Widget ratingGuideWidget() => Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: kMiamiAmberColor,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: const [
-              BoxShadow(
-                  blurRadius: 4, color: Colors.black26, offset: Offset(2, 2))
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Rating Guide",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: theme.canvasColor)),
-              Divider(color: theme.canvasColor),
-              Text(ratingGuide,
-                  style: guideTextStyle(theme)),
-            ],
-          ),
-        );
-
-    Widget tagGuideWidget() => Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: kMiamiAmberColor,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: const [
-              BoxShadow(
-                  blurRadius: 4, color: Colors.black26, offset: Offset(2, 2))
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Tagging Guide",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: theme.canvasColor)),
-              Divider(color: theme.canvasColor),
-              Text(taggingGuide,
-                  style: guideTextStyle(theme)),
-            ],
-          ),
-        );
-
     return Scaffold(
-      appBar: AppBar(title: const Text("Create Review", style: pageTitleTextStyle)),
+      appBar:
+          AppBar(title: const Text("Create Review", style: pageTitleTextStyle)),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: isWide ? 1000 : 600),
@@ -254,7 +189,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         ),
                         if (!isWide) ...[
                           const SizedBox(height: 16),
-                          postGuideWidget(),
+                          _postGuideWidget(theme),
                         ],
                         const SizedBox(height: 16),
                         Row(children: [
@@ -306,7 +241,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                 border: OutlineInputBorder())),
                         if (!isWide) ...[
                           const SizedBox(height: 16),
-                          tagGuideWidget(),
+                          _tagGuideWidget(),
                         ],
                         const SizedBox(height: 24),
                         Text("Rating: ${_rating.toInt()}/100",
@@ -327,7 +262,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         // Jeśli ekran jest wąski, wstawiamy legendę tutaj
                         if (!isWide) ...[
                           const SizedBox(height: 16),
-                          ratingGuideWidget(),
+                          _ratingGuideWidget(),
                         ],
 
                         const SizedBox(height: 24),
@@ -351,11 +286,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       flex: 1,
                       child: Column(
                         children: [
-                          postGuideWidget(),
+                          _postGuideWidget(theme),
                           const SizedBox(height: 16),
-                          ratingGuideWidget(),
+                          _ratingGuideWidget(),
                           const SizedBox(height: 16),
-                          tagGuideWidget(),
+                          _tagGuideWidget(),
                         ],
                       ),
                     ),

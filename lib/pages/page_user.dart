@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'api_service.dart';
-import 'common_widgets.dart';
-import 'constants.dart';
-import 'models.dart';
+import 'package:miami_amber_frontend/api/api_service.dart';
+import 'package:miami_amber_frontend/api/models.dart';
+import 'package:miami_amber_frontend/constants.dart';
+import 'package:miami_amber_frontend/widgets/responsive_post_grid.dart';
 
 class UserSearchScreen extends StatefulWidget {
   final String? initialUsername; // Dodaj to pole
@@ -41,9 +40,10 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
         _userData = data;
       });
     } catch (e) {
-      if (mounted)
+      if (mounted){
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
     } finally {
       setState(() => _isLoading = false);
     }
@@ -96,20 +96,6 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
   }
 }
 
-/*
-Widget userNameBar(Map<String, dynamic> userData) {
-  print(userData);
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Column(
-      children: [
-        Text(userData['user']['name'], style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        Text(userData['user']['description'] ?? "No description", style: const TextStyle(fontStyle: FontStyle.italic)),
-      ],
-    ),
-  );
-}*/
-
 class UserHeader extends StatefulWidget {
   final Map<String, dynamic> userData;
 
@@ -140,11 +126,12 @@ class _UserHeaderState extends State<UserHeader> {
       final currentUserId = await _api.getCurrentUserId();
 
       if (currentUserId == targetUserId) {
-        if (mounted)
+        if (mounted){
           setState(() {
             _isMe = true;
             _isLoading = false;
           });
+        }
         return;
       }
 

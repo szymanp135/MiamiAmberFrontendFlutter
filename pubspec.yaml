@@ -1,5 +1,5 @@
-name: miami_amber_flutter_frontend
-description: "Miami Amber flutter frontend"
+name: miami_amber_frontend
+description: "Miami Amber frontend"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
