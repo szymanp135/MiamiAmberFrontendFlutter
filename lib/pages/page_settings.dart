@@ -62,8 +62,7 @@ class _SettingsTabContent extends StatelessWidget {
                         value: SortingType.byLeastRated,
                         child: Text("Least Rated first")),
                     DropdownMenuItem(
-                        value: SortingType.random,
-                        child: Text("Random order")),
+                        value: SortingType.random, child: Text("Random order")),
                   ],
                   onChanged: (val) {
                     if (val != null) {

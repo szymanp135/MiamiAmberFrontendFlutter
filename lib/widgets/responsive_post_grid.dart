@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:miami_amber_frontend/api/models.dart';
 import 'package:miami_amber_frontend/constants.dart';
 import 'package:miami_amber_frontend/pages/page_user.dart';
+import 'package:miami_amber_frontend/providers/random_provider.dart';
 import 'package:miami_amber_frontend/providers/settings_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +27,7 @@ class ResponsivePostGrid extends StatelessWidget {
     if (posts.isEmpty) return const Center(child: Text('No posts found.'));
 
     final settings = Provider.of<SettingsProvider>(context);
+    final random = Provider.of<RandomProvider>(context);
 
     final sortedPosts = List<Post>.from(posts);
     sortedPosts.sort((a, b) {
@@ -34,17 +36,17 @@ class ResponsivePostGrid extends StatelessWidget {
           return b.date.compareTo(a.date);
         case SortingType.byOldest:
           return a.date.compareTo(b.date);
-        case SortingType.byMostRated:{
-          if (b.title == 'Never Gonna Give You Up'){
-            return 10000;
+        case SortingType.byMostRated:
+          {
+            if (b.title == 'Never Gonna Give You Up') {
+              return 10000;
+            }
+            return b.rating!.compareTo(a.rating!);
           }
-          return b.rating!.compareTo(a.rating!);
-        }
         case SortingType.byLeastRated:
           return a.rating!.compareTo(b.rating!);
         case SortingType.random:
-          return Random(DateTime.now().millisecondsSinceEpoch)
-              .nextInt(sortedPosts.length);
+          return random.getRandom;
       }
     });
 
@@ -183,7 +185,12 @@ class VerticalPostCard extends StatelessWidget {
                 // Tekst recenzji w całości
                 SelectableText(
                   fixText(post.text),
-                  style: const TextStyle(fontSize: 15, height: 1.4),
+                  //textAlign: TextAlign.justify,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    height: 1.4,
+                    //letterSpacing: 1.0,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Row(

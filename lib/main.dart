@@ -6,6 +6,7 @@ import 'package:miami_amber_frontend/pages/page_profile.dart';
 import 'package:miami_amber_frontend/pages/page_settings.dart';
 import 'package:miami_amber_frontend/pages/page_user.dart';
 import 'package:miami_amber_frontend/providers/auth_provider.dart';
+import 'package:miami_amber_frontend/providers/random_provider.dart';
 import 'package:miami_amber_frontend/providers/settings_provider.dart';
 import 'package:miami_amber_frontend/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_) => RandomProvider())
       ],
       child: const MiamiAmberApp(),
     ),
