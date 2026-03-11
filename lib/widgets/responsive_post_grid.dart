@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:intl/intl.dart';
 import 'package:miami_amber_frontend/api/models.dart';
 import 'package:miami_amber_frontend/constants.dart';
+import 'package:miami_amber_frontend/pages/page_user.dart';
 import 'package:miami_amber_frontend/providers/settings_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -31,10 +34,17 @@ class ResponsivePostGrid extends StatelessWidget {
           return b.date.compareTo(a.date);
         case SortingType.byOldest:
           return a.date.compareTo(b.date);
-        case SortingType.byMostRated:
+        case SortingType.byMostRated:{
+          if (b.title == 'Never Gonna Give You Up'){
+            return 10000;
+          }
           return b.rating!.compareTo(a.rating!);
+        }
         case SortingType.byLeastRated:
           return a.rating!.compareTo(b.rating!);
+        case SortingType.random:
+          return Random(DateTime.now().millisecondsSinceEpoch)
+              .nextInt(sortedPosts.length);
       }
     });
 
@@ -71,6 +81,9 @@ class ResponsivePostGrid extends StatelessWidget {
                         DropdownMenuItem(
                             value: SortingType.byLeastRated,
                             child: Text("Least Rated first")),
+                        DropdownMenuItem(
+                            value: SortingType.random,
+                            child: Text("Random order")),
                       ],
                       onChanged: (val) {
                         if (val != null) {
@@ -190,12 +203,22 @@ class VerticalPostCard extends StatelessWidget {
                 if (post.user != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: SelectableText(
-                      "by ${post.user!.name}",
-                      style: const TextStyle(
-                          fontSize: 11,
-                          color: kMiamiAmberColor,
-                          fontWeight: FontWeight.bold),
+                    child: InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserSearchScreen(
+                            initialUsername: post.user!.name,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        "by ${post.user!.name}",
+                        style: const TextStyle(
+                            fontSize: 11,
+                            color: kMiamiAmberColor,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
               ],

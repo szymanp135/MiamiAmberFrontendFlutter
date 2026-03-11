@@ -16,8 +16,8 @@ class _FollowingSliverListState extends State<FollowingSliverList> {
 
   void _refresh() {
     setState(() {
-      _refreshKey =
-          UniqueKey(); // Zmiana klucza zmusza widget do ponownego pobrania danych
+      // Zmiana klucza zmusza widget do ponownego pobrania danych
+      _refreshKey = UniqueKey();
     });
   }
 

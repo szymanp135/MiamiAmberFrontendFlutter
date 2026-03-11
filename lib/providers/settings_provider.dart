@@ -5,13 +5,15 @@ enum SortingType {
   byNewest,
   byOldest,
   byMostRated,
-  byLeastRated;
+  byLeastRated,
+  random;
 
   static SortingType fromString(String s) => switch (s) {
         "byNewest" => byNewest,
         "byOldest" => byOldest,
         "byMostRated" => byMostRated,
         "byLeastRated" => byLeastRated,
+        "random" => random,
         _ => byNewest
       };
 }

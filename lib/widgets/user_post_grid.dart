@@ -42,7 +42,9 @@ class _UserPostSliverGridState extends State<UserPostSliverGrid> {
           return const Center(child: SelectableText('No posts found.'));
         }
 
-        final userPosts = snapshot.data!.where((p) => p.user != null && p.user!.id == widget.userId).toList();
+        final userPosts = snapshot.data!
+            .where((p) => p.user != null && p.user!.id == widget.userId)
+            .toList();
 
         return ResponsivePostGrid(posts: userPosts);
       },

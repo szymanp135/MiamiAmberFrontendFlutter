@@ -40,7 +40,7 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
         _userData = data;
       });
     } catch (e) {
-      if (mounted){
+      if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
@@ -126,7 +126,7 @@ class _UserHeaderState extends State<UserHeader> {
       final currentUserId = await _api.getCurrentUserId();
 
       if (currentUserId == targetUserId) {
-        if (mounted){
+        if (mounted) {
           setState(() {
             _isMe = true;
             _isLoading = false;
